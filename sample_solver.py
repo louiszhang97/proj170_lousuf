@@ -56,13 +56,15 @@ def solve(P, M, N, C, items, constraints):
     for j in range(1, P + 1): #weight capacity
       for k in range(1, M + 1): #how much money
         if items[i][2] > j or items[i][3] > k:  #
-          table[i][j][k] = (total_resale_val(current_sack) + k, current_sack[:])
+          # table[i][j][k] = (total_resale_val(current_sack) + k, current_sack[:])
+          table[i][j][k] = table[i - 1][j][k]
         else: 
           if table[bound_zero(i - 1)][j][k][0] > table[i][bound_zero(j - items[i][2])][bound_zero(k - item[i][3])] + item[i][4]: 
-            table[i][j][k] = (total_resale_val(current_sack) + k, current_sack[:])
-          elif violates_constraint(current_sack, items[i]) == False: 
-            updated_sack = current_sack[:]
-            updated_sack.append(items[i][0])
+            #table[i][j][k] = (total_resale_val(current_sack) + k, current_sack[:])
+            table[i][j][k] = table[i - 1][j][k]
+          elif violates_constraint(table[i - 1][j][k][1], items[i]) == False: 
+            updated_sack = table[i - 1][j][k][1][:]
+            updated_sack.append(items[i])
             table[i][j][k] = (total_resale_val(updated_sack) + k, updated_sack)
   max_val = (float('-inf'), [])
   for i in range(1, N + 1): #num items 
