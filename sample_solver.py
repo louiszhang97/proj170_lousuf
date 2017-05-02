@@ -44,6 +44,7 @@ def solve(P, M, N, C, items, constraints):
       return num 
 
   table = []
+  #table values look like(total resale val of sack + leftover money, list of items in the sack)
   for i in range(0, N + 1): 
     table.append([])
     for j in range(0, P + 1): 
