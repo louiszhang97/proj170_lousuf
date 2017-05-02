@@ -18,6 +18,7 @@ def solve(P, M, N, C, items, constraints):
   """
   # item = (name, class, weight, cost, resale_val)
   constr = {}
+  #constr = {item_class: incompatible classes to it}
   for s in constraints:
     for item_class in s: 
       if item_class not in constr: 
