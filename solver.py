@@ -9,7 +9,9 @@ import argparse
   Please complete the following function.
 ===============================================================================
 """
-
+def run(filename): 
+  tup = read_input(filename)
+  return solve(tup[0], tup[1], tup[2], tup[3], tup[4], tup[5])
 def solve(P, M, N, C, items, constraints):
   """
   Write your amazing algorithm here.
@@ -27,10 +29,13 @@ def solve(P, M, N, C, items, constraints):
         if other_class != s and other_class not in constr[item_class]:
           constr[item_class].add(other_class)
   def violates_constraint(current_sack, item):
-    for i in current_sack: 
+    if len(constr) == 0: 
+      return False
+    else: 
+      for i in current_sack: 
       if item[1] in constr[i[1]]: 
         return True
-    return False 
+      return False 
 
   def total_resale_val(current_sack): 
     total = 0
@@ -39,41 +44,41 @@ def solve(P, M, N, C, items, constraints):
     return total
   def bound_zero(num): 
     if num < 0: 
-      return 0 
+      return int(0)
     else: 
-      return num 
+      return int(num) 
 
   table = []
   #table values look like(total resale val of sack + leftover money, list of items in the sack)
-  for i in range(0, N + 1): 
+  for i in range(0, int(N + 1)): 
     table.append([])
-    for j in range(0, P + 1): 
-      table[i].append[[]]
-      for k in range(0, M + 1): 
+    for j in range(0, int(P + 1)): 
+      table[i].append([])
+      for k in range(0, int(M + 1)): 
         table[i][j].append((0, []))
 
-  for i in range(1, N + 1): #num items 
-    for j in range(1, P + 1): #weight capacity
-      for k in range(1, M + 1): #how much money
-        if items[i][2] > j or items[i][3] > k:  #
+  for i in range(1, int(N + 1)): #num items 
+    for j in range(1, int(P + 1)): #weight capacity
+      for k in range(1, int(M + 1)): #how much money
+        if items[i - 1][2] > j or items[i - 1][3] > k:  #
           # table[i][j][k] = (total_resale_val(current_sack) + k, current_sack[:])
           table[i][j][k] = table[i - 1][j][k]
         else: 
-          if table[bound_zero(i - 1)][j][k][0] > table[i][bound_zero(j - items[i][2])][bound_zero(k - item[i][3])] + item[i][4]: 
+          if table[bound_zero(i - 1)][j][k][0] > table[i][bound_zero(j - items[i- 1][2])][bound_zero(k - items[i - 1][3])][0] + items[i - 1][4]: 
             #table[i][j][k] = (total_resale_val(current_sack) + k, current_sack[:])
             table[i][j][k] = table[i - 1][j][k]
-          elif violates_constraint(table[i - 1][j][k][1], items[i]) == False: 
+          elif violates_constraint(table[i - 1][j][k][1], items[i - 1]) == False: 
             updated_sack = table[i - 1][j][k][1][:]
-            updated_sack.append(items[i])
+            updated_sack.append(items[i - 1]) 
             table[i][j][k] = (total_resale_val(updated_sack) + k, updated_sack)
-  max_val = (float('-inf'), [])
-  for i in range(1, N + 1): #num items 
-    for j in range(1, P + 1): 
-      for k in range(1, M + 1): 
-        if table[i][j][k][0] > max_val[0]:
-          max_val = table[i][j][k]
-  return max_val[1]
-
+  # max_val = (float('-inf'), [])
+  # for i in range(1, int(N + 1)): #num items 
+  #   for j in range(1, int(P + 1)): 
+  #     for k in range(1, int(M + 1)): 
+  #       if table[i][j][k][0] > max_val[0]:
+  #         max_val = table[i][j][k]
+  # return max_val[1]
+  print("done")
   #table values look like (total resale of sack + leftover cash, current_sack)
 
   # def k(p, m, current_sack, remaining_items): 
