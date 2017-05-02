@@ -24,23 +24,31 @@ def solve(P, M, N, C, items, constraints):
   for s in constraints:
     for item_class in s: 
       if item_class not in constr: 
-        constr[item_class] = set()
+        constr[item_class] = []
       for other_class in s: 
-        if other_class != s and other_class not in constr[item_class]:
-          constr[item_class].add(other_class)
+        if other_class != item_class and other_class not in constr[item_class]:
+          constr[item_class].append(other_class)
+  for k, v in constr.items(): 
+    print(k, v)
+
   def violates_constraint(current_sack, item):
     if len(constr) == 0: 
       return False
     else: 
       for i in current_sack: 
-      if item[1] in constr[i[1]]: 
-        return True
+        if item[1] in constr[i[1]]: 
+          return True
       return False 
 
   def total_resale_val(current_sack): 
     total = 0
     for i in range(0, len(current_sack)): 
       total += current_sack[i][4]
+    return total
+  def total_cost(current_sack): 
+    total = 0
+    for i in range(0, len(current_sack)): 
+      total += current_sack[i][3]
     return total
   def bound_zero(num): 
     if num < 0: 
@@ -70,15 +78,19 @@ def solve(P, M, N, C, items, constraints):
           elif violates_constraint(table[i - 1][j][k][1], items[i - 1]) == False: 
             updated_sack = table[i - 1][j][k][1][:]
             updated_sack.append(items[i - 1]) 
-            table[i][j][k] = (total_resale_val(updated_sack) + k, updated_sack)
-  # max_val = (float('-inf'), [])
-  # for i in range(1, int(N + 1)): #num items 
-  #   for j in range(1, int(P + 1)): 
-  #     for k in range(1, int(M + 1)): 
-  #       if table[i][j][k][0] > max_val[0]:
-  #         max_val = table[i][j][k]
-  # return max_val[1]
-  print("done")
+            table[i][j][k] = (total_resale_val(updated_sack) - total_cost(updated_sack) + k, updated_sack)
+  max_val = (float('-inf'), [])
+  ans = []
+  for i in range(1, int(N + 1)): #num items 
+    for j in range(1, int(P + 1)): 
+      for k in range(1, int(M + 1)): 
+        if table[i][j][k][0] > max_val[0]:
+          max_val = table[i][j][k]
+  for i in range(0, len(max_val[1])): 
+    ans.append(max_val[1][i][0])
+  print(max_val[0])
+  return ans
+  # print("done")
   #table values look like (total resale of sack + leftover cash, current_sack)
 
   # def k(p, m, current_sack, remaining_items): 
