@@ -9,6 +9,12 @@ import heapq
   Please complete the following function.
 ===============================================================================
 """
+def run_tests(): 
+  for i in range(1, 22): 
+    filename = "project_instances/problem" + str(i) + ".in"
+    tup = read_input(filename)
+    items_chosen = solve(tup[0], tup[1], tup[2], tup[3], tup[4], tup[5])
+    write_output("out/problem" + str(i) + ".out", items_chosen)
 def run(filename): 
   tup = read_input(filename)
   return solve(tup[0], tup[1], tup[2], tup[3], tup[4], tup[5])
@@ -31,12 +37,13 @@ def solve(P, M, N, C, items, constraints):
   # for k, v in constr.items(): 
   #   print(k, v)
   def violates_constraint(current_sack, item):
-    if len(constr) == 0: 
+    if len(constr) == 0 or item[1] not in constr: 
       return False
     else: 
       for i in current_sack: 
-        if item[1] in constr[i[1]]: 
-          return True
+        if i[1] in constr: 
+          if item[1] in constr[i[1]]: 
+            return True
       return False 
   def total_resale_val(current_sack): 
     total = 0
@@ -54,27 +61,36 @@ def solve(P, M, N, C, items, constraints):
     else: 
       return int(num) 
   def priority(current_sack, item, money): 
-    return -(total_resale_val(current_sack) + money + item[4] - item[3])
-
+    return -(item[4] - item[3])
+    # return -(total_resale_val(current_sack) + money + item[4] - item[3])
+  def compare_priotiry(item1, item2): 
+    if (item1[4] - item1[3]) > (item1[4] - item1[3]): 
+      return 1
+    elif (item1[4] - item1[3]) == (item1[4] - item1[3]): 
+      return 0
+    else: 
+      return -1 
   pq = []
   current_sack = []
   weight = P
   money = M
   for item in items: 
-    heapq.heappush(pq, (priority(current_sack, item, money), item))
+    # heapq.heappush(pq, (priority(current_sack, item, money), item))
+    pq.append(item)
+  pq = sorted(pq, key = lambda item: item[4] - item[3], reverse = True)
   while len(pq) > 0: 
-    next_item = heapq.heappop(pq)[1]
+    next_item = pq.pop(0)
     if next_item[2] < weight and next_item[3] < money and violates_constraint(current_sack, next_item) == False: 
       current_sack.append(next_item)
       weight = weight - next_item[2]
       money = money - next_item[3]
     #update the pq by creating a new one 
-    new_pq = []
-    for i in range(0, len(pq)): 
-      item = heapq.heappop(pq)[1]
-      heapq.heappush(new_pq, (priority(current_sack, item, money), item))
-    pq = new_pq
-    
+    # new_pq = []
+    # for i in range(0, len(pq)): 
+    #   item = heapq.heappop(pq)[1]
+    #   heapq.heappush(new_pq, (priority(current_sack, item, money), item))
+    # pq = new_pq
+
   print(money + total_resale_val(current_sack))
   ans = []
   for item in current_sack: 
