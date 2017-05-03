@@ -50,26 +50,7 @@ def solve(P, M, N, C, items, constraints):
     for i in range(0, len(current_sack)): 
       total += current_sack[i][4]
     return total
-  def total_cost(current_sack): 
-    total = 0
-    for i in range(0, len(current_sack)): 
-      total += current_sack[i][3]
-    return total
-  def bound_zero(num): 
-    if num < 0: 
-      return int(0)
-    else: 
-      return int(num) 
-  def priority(current_sack, item, money): 
-    return -(item[4] - item[3])
-    # return -(total_resale_val(current_sack) + money + item[4] - item[3])
-  def compare_priotiry(item1, item2): 
-    if (item1[4] - item1[3]) > (item1[4] - item1[3]): 
-      return 1
-    elif (item1[4] - item1[3]) == (item1[4] - item1[3]): 
-      return 0
-    else: 
-      return -1 
+
   pq = []
   current_sack = []
   weight = P
@@ -97,8 +78,27 @@ def solve(P, M, N, C, items, constraints):
     ans.append(item[0])
   return ans
 
-
-
+  # def priority(current_sack, item, money): 
+  #   return -(item[4] - item[3])
+  #   # return -(total_resale_val(current_sack) + money + item[4] - item[3])
+  # def compare_priotiry(item1, item2): 
+  #   if (item1[4] - item1[3]) > (item1[4] - item1[3]): 
+  #     return 1
+  #   elif (item1[4] - item1[3]) == (item1[4] - item1[3]): 
+  #     return 0
+  #   else: 
+  #     return -1 
+  # def total_cost(current_sack): 
+  #   total = 0
+  #   for i in range(0, len(current_sack)): 
+  #     total += current_sack[i][3]
+  #   return total
+  # def bound_zero(num): 
+  #   if num < 0: 
+  #     return int(0)
+  #   else: 
+  #     return int(num) 
+  """DP ALGORITHM""" 
   # table = []
   # #table values look like(total resale val of sack + leftover money, list of items in the sack)
   # for i in range(0, int(N + 1)): 
